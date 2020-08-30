@@ -1,8 +1,13 @@
+pub mod crypto;
+
 use color_eyre::Result;
 use eyre::WrapErr;
 use serde::Deserialize;
 use sqlx::postgres::PgPool;
 use dotenv::dotenv;
+
+use crypto::CryptoService;
+use std::sync::Arc;
 use tracing::{info, instrument};
 use tracing_subscriber::EnvFilter;
 
@@ -10,7 +15,8 @@ use tracing_subscriber::EnvFilter;
 pub struct Config {
   pub host: String,
   pub port: i32,
-  pub database_url: String
+  pub database_url: String,
+  pub secret_key: String
 }
 
 impl Config {
@@ -42,4 +48,12 @@ impl Config {
           .await
           .context("creating database connection pool")
   }
+
+
+  pub fn crypto_service(&self) -> CryptoService {
+    CryptoService {
+      key: Arc::new(self.secret_key.clone())
+    }
+  }
+
 }
