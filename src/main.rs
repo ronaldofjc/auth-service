@@ -1,5 +1,9 @@
+#[macro_use]
+extern crate validator_derive;
+
 mod config;
 mod handlers;
+mod models;
 
 use color_eyre::Result;
 use crate::config::Config;
